@@ -1,0 +1,18 @@
+-- This SQL query retrieves information about movies, their languages, categories, actors, and the total revenue generated from payments, aggregated and sorted by revenue in descending order.
+SELECT 
+    f.title AS movie_title,
+    l.name AS language,
+    c.name AS category,
+    a.first_name || ' ' || a.last_name AS actor_name,
+    SUM(p.amount) AS total_revenue
+FROM payment p
+JOIN rental r ON p.rental_id = r.rental_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON i.film_id = f.film_id
+JOIN language l ON f.language_id = l.language_id
+JOIN film_category fc ON f.film_id = fc.film_id
+JOIN category c ON fc.category_id = c.category_id
+JOIN film_actor fa ON f.film_id = fa.film_id
+JOIN actor a ON fa.actor_id = a.actor_id
+GROUP BY f.title, l.name, c.name, actor_name
+ORDER BY total_revenue DESC;

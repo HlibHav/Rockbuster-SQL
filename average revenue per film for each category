@@ -1,0 +1,12 @@
+-- This SQL query calculates the average revenue per film for each category (e.g., Action, Comedy, Drama), and ranks them from highest to lowest revenue per film.
+SELECT 
+    c.name AS category,
+    ROUND(SUM(p.amount) / COUNT(DISTINCT f.film_id), 2) AS avg_revenue_per_film
+FROM payment p
+JOIN rental r ON p.rental_id = r.rental_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON i.film_id = f.film_id
+JOIN film_category fc ON f.film_id = fc.film_id
+JOIN category c ON fc.category_id = c.category_id
+GROUP BY c.name
+ORDER BY avg_revenue_per_film DESC;

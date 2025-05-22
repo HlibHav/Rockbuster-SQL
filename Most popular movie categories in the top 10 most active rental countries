@@ -1,0 +1,29 @@
+-- This query identifies the most popular movie categories in the top 10 most active rental countries, ranked by how many rentals came from each country.
+WITH top_countries AS (
+    SELECT co.country
+    FROM rental r
+    JOIN customer cu ON r.customer_id = cu.customer_id
+    JOIN address a ON cu.address_id = a.address_id
+    JOIN city ci ON a.city_id = ci.city_id
+    JOIN country co ON ci.country_id = co.country_id
+    GROUP BY co.country
+    ORDER BY COUNT(*) DESC
+    LIMIT 10
+)
+
+SELECT 
+    co.country,
+    cat.name AS category,
+    COUNT(*) AS rental_count
+FROM rental r
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON i.film_id = f.film_id
+JOIN film_category fc ON f.film_id = fc.film_id
+JOIN category cat ON fc.category_id = cat.category_id
+JOIN customer cu ON r.customer_id = cu.customer_id
+JOIN address a ON cu.address_id = a.address_id
+JOIN city ci ON a.city_id = ci.city_id
+JOIN country co ON ci.country_id = co.country_id
+WHERE co.country IN (SELECT country FROM top_countries)
+GROUP BY co.country, cat.name
+ORDER BY co.country, rental_count DESC;

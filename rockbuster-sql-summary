@@ -1,0 +1,33 @@
+SELECT 
+  -- Rental price stats
+  (SELECT MIN(rental_rate) FROM film) AS min_rental_price,
+  (SELECT MAX(rental_rate) FROM film) AS max_rental_price,
+  (SELECT ROUND(AVG(rental_rate), 2) FROM film) AS avg_rental_price,
+
+  -- Rental duration stats
+  (SELECT MIN(rental_duration) FROM film) AS min_rental_duration,
+  (SELECT MAX(rental_duration) FROM film) AS max_rental_duration,
+  (SELECT ROUND(AVG(rental_duration), 2) FROM film) AS avg_rental_duration,
+
+  -- Customer, store, country counts
+  (SELECT COUNT(*) FROM customer) AS number_of_customers,
+  (SELECT COUNT(*) FROM store) AS number_of_stores,
+  (SELECT COUNT(*) FROM country) AS number_of_countries,
+
+  -- Late returns (based on logic where return_date > expected due date)
+  (SELECT COUNT(*) 
+   FROM rental r 
+   JOIN inventory i ON r.inventory_id = i.inventory_id
+   JOIN film f ON i.film_id = f.film_id
+   WHERE r.return_date > r.rental_date + (f.rental_duration || ' days')::INTERVAL
+  ) AS number_of_late_returns,
+
+  -- Rentals per customer
+  (SELECT ROUND(COUNT(*) * 1.0 / (SELECT COUNT(*) FROM customer), 2) FROM rental) AS avg_rentals_per_customer,
+
+  -- Inventory and film titles
+  (SELECT COUNT(*) FROM inventory) AS total_inventory,
+  (SELECT COUNT(*) FROM film) AS unique_titles,
+
+  -- Total rentals
+  (SELECT COUNT(*) FROM rental) AS total_rentals;

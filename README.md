@@ -90,12 +90,6 @@ Payments: Records of transactions and revenue details.
   
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## 🙋 Author
 
 **Glib Gavryliuk** [Linkedin](https://www.linkedin.com/in/glebaz/)  

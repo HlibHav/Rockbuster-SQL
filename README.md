@@ -98,6 +98,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 🙋 Author
 
-**Glib Gavryliuk**  
+**Glib Gavryliuk** [Linkedin](https://www.linkedin.com/in/glebaz/)  
 Data Analyst – Berlin  
 Project completed as part of the CareerFoundry Data Analytics Program.

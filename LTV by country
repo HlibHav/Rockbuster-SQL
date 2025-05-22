@@ -1,0 +1,18 @@
+-- This SQL query calculates the average customer lifetime value (LTV) per country, showing how much customers from each country spend on average.
+SELECT 
+    co.country,
+    ROUND(AVG(customer_ltv.total_spent), 2) AS avg_ltv
+FROM (
+    SELECT 
+        cu.customer_id,
+        SUM(p.amount) AS total_spent
+    FROM payment p
+    JOIN customer cu ON p.customer_id = cu.customer_id
+    GROUP BY cu.customer_id
+) AS customer_ltv
+JOIN customer cu ON customer_ltv.customer_id = cu.customer_id
+JOIN address a ON cu.address_id = a.address_id
+JOIN city ci ON a.city_id = ci.city_id
+JOIN country co ON ci.country_id = co.country_id
+GROUP BY co.country
+ORDER BY avg_ltv DESC;
